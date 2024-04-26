@@ -114,6 +114,25 @@ def add_micro_ros_agent():
         arguments=['serial', '--dev', '/dev/fcu_data', '-b', '921600'])
     return action
 
+def add_barometer_node():
+    action = Node(executable='barometer',
+                  package='hardware',
+                  name='barometer',
+                  parameters=[{
+                      'device': '/dev/i2c-1',
+                      'update_period_ms': 50
+                  }])
+    return action
+
+
+def add_ping1d_node():
+    action = Node(executable='ping1d_node',
+                  package='ping1d',
+                  name='ping1d',
+                  parameters=[]
+                  )
+    return action
+
 
 def generate_launch_description():
     launch_description = LaunchDescription()
@@ -127,6 +146,8 @@ def generate_launch_description():
         add_camera_servo_node(),
         add_spotlight_node(),
         add_esc_node(),
+        add_barometer_node(),
+        add_ping1d_node(),
     ]
     group = GroupAction(
         [PushRosNamespace(LaunchConfiguration('vehicle_name'))] + actions)
